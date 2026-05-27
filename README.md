@@ -1,6 +1,4 @@
-# CSOT 2026 — iGEM × ARIES, IIT Delhi
-
-> **Computational Synthetic Biology & Bioinformatics | 6-Week Summer Course**
+﻿# CSOT 2026 — iGEM × ARIES, IIT Delhi
 
 ---
 
@@ -16,32 +14,50 @@ ARIES is a student technical club at IIT Delhi focused on computational methods,
 
 ---
 
-## About This Course
+## What You Will Learn
 
-CSOT 2026 is a **6-week collaborative summer course** jointly organized by iGEM IITD and ARIES IITD. It is designed for students who want to build practical skills in computational biology and bioinformatics — from first principles to hands-on pipelines.
+CSOT 2026 is a **6-week collaborative summer course** jointly organized by iGEM IITD and ARIES IITD. It is designed for students who want to build practical skills in computational biology and bioinformatics — no prior biology knowledge required.
+
+The course follows a deliberate arc: you start by understanding what proteins are and where to find them, then learn to represent them as mathematical objects, then train increasingly powerful models on them, and finally wire everything together into a complete end-to-end biological prediction pipeline.
 
 Each week covers a focused set of topics followed by a graded assignment. Assignment scores feed into a live **leaderboard** that tracks participant standings throughout the course.
 
 | Week | Topics | Assignment | Status |
 |------|--------|------------|--------|
-| [Week 1](weeks/week1.md) | Central Dogma · Amino Acids · Sequence Databases · Alignment | [View](weeks/week1-assignment.md) | **Active** |
-| Week 2 | *(coming soon)* | — | Upcoming |
-| Week 3 | *(coming soon)* | — | Upcoming |
-| Week 4 | *(coming soon)* | — | Upcoming |
-| Week 5 | *(coming soon)* | — | Upcoming |
-| Week 6 | *(coming soon)* | — | Upcoming |
+| [Week 1](weeks/week1/index.md) | Central Dogma · Amino Acid Properties · FASTA, NCBI, Biopython & UniProt · Sequence Alignment & CLUSTAL | [View](weeks/week1/assignment.md) | **Active** |
+| Week 2 | Protein Structure · PDB In Depth · DSSP Algorithm · Protein Language Models & Sliding Window Encoding | — | Upcoming |
+| Week 3 | K-mers · TF-IDF · One-Hot Encoding · Naive Bayes & HMMs · SVMs · Random Forests | — | Upcoming |
+| Week 4 | PyTorch for Sequences · 1D CNNs & Motif Discovery · RNNs & LSTMs · Transformers & Self-Attention | — | Upcoming |
+| Week 5 | Evolutionary MSA Features · PSSM Profiles · Hyperparameter Tuning | — | Upcoming |
+| Week 6 | End-to-End Pipeline · Error Analysis & Iteration · Inferring Biological Properties from Model Outputs | — | Upcoming |
+
+### The big picture
+
+```
+Week 1 — Biology foundations + sequence databases
+   ↓
+Week 2 — Protein structure and rich representations
+   ↓
+Week 3 — Classical ML: turn sequences into feature vectors and classify them
+   ↓
+Week 4 — Deep learning: CNNs, LSTMs, and Transformers on raw sequences
+   ↓
+Week 5 — Evolutionary signals: PSSM and MSA features to boost your model
+   ↓
+Week 6 — Putting it all together: a full biological prediction pipeline
+```
 
 ---
 
 ## Leaderboard
 
-Standings are updated after each week's assignment deadline.  
+Standings are updated after each week's assignment deadline.
 Full scoring rubric and current rankings → [Leaderboard](leaderboard.md)
 
 ---
 
 ## Quick Links
 
-- [Week 1 — Topics](weeks/week1.md)
-- [Week 1 — Assignment](weeks/week1-assignment.md)
+- [Week 1 — Topics](weeks/week1/index.md)
+- [Week 1 — Assignment](weeks/week1/assignment.md)
 - [Leaderboard](leaderboard.md)

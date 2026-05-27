@@ -1,6 +1,6 @@
 ﻿# Week 1 Assignment — Protein Sequence Alignment
 
-[← Week 1 Topics](week1.md) | [Leaderboard →](../leaderboard.md)
+[← Week 1 Topics](index.md) | [Leaderboard →](../../leaderboard.md)
 
 ---
 
@@ -125,4 +125,4 @@ Submit a single PDF or Markdown file containing:
 
 ---
 
-[← Week 1 Topics](week1.md) | [Leaderboard →](../leaderboard.md)
+[← Week 1 Topics](index.md) | [Leaderboard →](../../leaderboard.md)

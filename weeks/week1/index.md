@@ -1,6 +1,6 @@
 ﻿# Week 1 — Sequences, Databases & Alignment
 
-[← Home](../README.md) | [Week 1 Assignment →](week1-assignment.md)
+[← Home](../../README.md) | [Week 1 Assignment →](assignment.md)
 
 ---
 
@@ -313,4 +313,4 @@ Blocks of `*` symbols indicate **conserved regions** — these are the hotspots 
 
 ---
 
-[← Home](../README.md) | [Week 1 Assignment →](week1-assignment.md)
+[← Home](../../README.md) | [Week 1 Assignment →](assignment.md)
