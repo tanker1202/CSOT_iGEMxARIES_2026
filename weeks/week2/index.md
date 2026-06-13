@@ -377,4 +377,4 @@ Protein sequence
 
 ---
 
-[← Home](../../README.md)
+[← Home](../../README.md) | [Assignment →](assignment.md)
