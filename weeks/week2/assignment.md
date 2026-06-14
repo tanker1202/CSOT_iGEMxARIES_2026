@@ -6,9 +6,9 @@
 
 ## Task
 
-Choose a protein from the table below, download its PDB structure, extract per-residue secondary structure labels using DSSP, and build a sliding window one-hot feature matrix. Submit a report covering all three deliverables.
+Choose a protein from the table below, download its structure in mmCIF format, extract per-residue secondary structure labels using `pydssp`, and build a sliding window one-hot feature matrix. Submit a report covering all three deliverables.
 
-> This assignment is the foundation for everything ahead: the DSSP labels you extract here are the **ground-truth targets** your ML model will learn to predict in Weeks 3 and 4.
+> This assignment is the foundation for everything ahead: the Q3 labels you extract here are the **ground-truth targets** your ML model will learn to predict in Weeks 3 and 4.
 
 ### Suggested proteins (pick one, or choose your own)
 
@@ -25,9 +25,9 @@ You may choose your own protein — it must have a solved X-ray or cryo-EM struc
 
 ## Deliverables
 
-### 1. PDB Structure Summary
+### 1. Structure Summary
 
-Parse the PDB file using Biopython and report the following for **one chain of your choice**:
+Parse the mmCIF file using Biopython and report the following for **one chain of your choice**:
 
 - PDB ID, protein name, organism, experimental method, and resolution (find these on the RCSB page or in the PDB header).
 - Chain ID you analysed and total number of residues in that chain.
@@ -35,12 +35,11 @@ Parse the PDB file using Biopython and report the following for **one chain of y
 
 > Tip: filter for `atom.get_name() == "CA"` when iterating over atoms.
 
-### 2. DSSP Secondary Structure Labelling
+### 2. Secondary Structure Labelling
 
-Run DSSP on your structure and report:
+Run secondary structure assignment on your structure using `pydssp` and report:
 
-- The full 8-class DSSP distribution — a table showing each label (`H`, `G`, `I`, `E`, `B`, `T`, `S`, `C`) and the count and percentage of residues assigned to it.
-- The **Q3 distribution** — collapse the 8 labels into H / E / C using the mapping from the Week 2 notes, and report the count and percentage for each Q3 class.
+- The **Q3 distribution** — count and percentage of residues in each of the three classes: H (helix), E (strand), C (coil).
 - The **longest continuous helix** (Q3 label `H`) and the **longest continuous strand** (Q3 label `E`) in your chain — give the start and end residue numbers and the length of each run.
 - A text or ASCII representation of the per-residue Q3 label string across the full chain (just print the string of H/E/C characters).
 
@@ -57,46 +56,46 @@ Implement the one-hot sliding window encoding from the Week 2 notes (window size
 ## Recommended Workflow
 
 ```
-1. Download the PDB file
-   - Go to https://www.rcsb.org/structure/<PDBID>
-   - Click Download > PDB Format  (or use Biopython PDBList, shown below)
+1. Download the mmCIF file
+   - Use PDBList (shown in the code snippets below) — saves as <id>.cif
 
 2. Parse the structure
-   - Use Bio.PDB.PDBParser to load the file
+   - Use Bio.PDB.MMCIFParser to load the file
    - Pick a single chain to analyse
 
-3. Run DSSP
-   - Option A (no installation): upload the .pdb file to the DSSP web server at
-     https://www3.cmbi.umcn.nl/dssp/
-     and download the output
-   - Option B (Biopython): Bio.PDB.DSSP — see code snippet below
-     (requires dssp / mkdssp binary installed separately)
+3. Assign secondary structure
+   - Extract backbone coordinates (N, CA, C, O) from your chain
+   - Run pydssp.assign() to get per-residue Q3 labels (H / E / C)
 
 4. Compute Q3 distribution
-   - Map the 8 DSSP labels to H / E / C
-   - Count residues in each class
+   - Count residues in each Q3 class
 
 5. Find longest runs
-   - Iterate over the Q3 string and track the current run length
+   - Iterate over the Q3 label list and track the current run length
 
 6. Build the feature matrix
+   - Convert residue names to one-letter codes
    - Implement one_hot() and sliding_window_encode() from the Week 2 notes
    - Separate rows by Q3 label; average the 340-dimensional vectors per class
 
 7. Write up your report
 ```
 
-### Biopython code snippets
+### Code snippets
 
-**Downloading and parsing a PDB file:**
+**Installation:**
 
-    from Bio.PDB import PDBList, PDBParser
+    pip install biopython numpy pydssp
+
+**Downloading and parsing an mmCIF file:**
+
+    from Bio.PDB import PDBList, MMCIFParser
 
     pdbl = PDBList()
-    pdbl.retrieve_pdb_file("1TGT", file_type="pdb", pdir=".")   # saves as pdb1tgt.ent
+    filename = pdbl.retrieve_pdb_file("1UBQ", file_format="mmCif", pdir=".")   # saves as 1ubq.cif
 
-    parser = PDBParser(QUIET=True)
-    structure = parser.get_structure("protein", "pdb1tgt.ent")
+    parser = MMCIFParser(QUIET=True)
+    structure = parser.get_structure("protein", filename)
     chain = structure[0]["A"]   # model 0, chain A
 
     # Print first 5 CA atoms
@@ -107,36 +106,50 @@ Implement the one-hot sliding window encoding from the Week 2 notes (window size
                 print(residue.resname, residue.id[1], atom.get_coord())
                 count += 1
 
-**Running DSSP with Biopython:**
+**Assigning secondary structure with pydssp:**
 
-    from Bio.PDB import PDBParser
-    from Bio.PDB.DSSP import DSSP
+    import numpy as np
+    import pydssp
 
-    parser = PDBParser(QUIET=True)
-    structure = parser.get_structure("protein", "pdb1tgt.ent")
-    model = structure[0]
+    BACKBONE = ["N", "CA", "C", "O"]
+    coords = []
+    residue_info = []   # (resname, res_seq_num)
 
-    dssp = DSSP(model, "pdb1tgt.ent")   # requires mkdssp binary
+    for residue in chain:
+        if residue.id[0] != " ":   # skip HETATM records
+            continue
+        try:
+            row = [residue[atom].get_coord() for atom in BACKBONE]
+            coords.append(row)
+            residue_info.append((residue.resname, residue.id[1]))
+        except KeyError:
+            pass   # skip residues missing backbone atoms
 
-    Q3_MAP = {
-        "H": "H", "G": "H", "I": "H",   # all helix types -> H
-        "E": "E", "B": "E",               # strand types    -> E
-        "T": "C", "S": "C", "C": "C",    # everything else -> C
-        "-": "C"
-    }
+    coords = np.array(coords, dtype=np.float32)   # shape (L, 4, 3)
+    ss3 = pydssp.assign(coords, out_type="c3")    # array of '-', 'H', 'E'
 
-    for (chain_id, res_id), values in dssp.property_dict.items():
-        aa      = values[1]   # amino acid one-letter code
-        ss8     = values[2]   # 8-class DSSP label
-        ss3     = Q3_MAP.get(ss8, "C")
-        print(chain_id, res_id[1], aa, ss8, ss3)
+    Q3_MAP = {"-": "C", "H": "H", "E": "E"}
+    q3_labels = [Q3_MAP[s] for s in ss3]
+
+    for label in ("H", "E", "C"):
+        n = q3_labels.count(label)
+        print(f"{label}: {n} ({100 * n / len(q3_labels):.1f}%)")
+
+    print("".join(q3_labels))   # full Q3 string
 
 **Sliding window one-hot encoding:**
 
-    import numpy as np
-
     AA_ORDER = "ACDEFGHIKLMNPQRSTVWY"
     aa_to_idx = {aa: i for i, aa in enumerate(AA_ORDER)}
+
+    THREE_TO_ONE = {
+        "ALA":"A","CYS":"C","ASP":"D","GLU":"E","PHE":"F",
+        "GLY":"G","HIS":"H","ILE":"I","LYS":"K","LEU":"L",
+        "MET":"M","ASN":"N","PRO":"P","GLN":"Q","ARG":"R",
+        "SER":"S","THR":"T","VAL":"V","TRP":"W","TYR":"Y",
+    }
+
+    sequence = "".join(THREE_TO_ONE.get(r, "X") for r, _ in residue_info)
 
     def one_hot(aa):
         vec = np.zeros(20)
@@ -153,10 +166,8 @@ Implement the one-hot sliding window encoding from the Week 2 notes (window size
             features.append(np.concatenate([one_hot(aa) for aa in w]))
         return np.array(features)   # shape: (L, window * 20)
 
-    # Example usage
-    sequence = "MNIFEMLRID"   # replace with your actual chain sequence
     X = sliding_window_encode(sequence, window=17)
-    print(X.shape)   # (10, 340)
+    print(X.shape)   # (L, 340)
 
 → [Biopython PDB docs](https://biopython.org/docs/latest/Tutorial/chapter_pdb.html)  
 
@@ -200,8 +211,7 @@ Submit a single PDF or Markdown file (with any code in a `.py` file or notebook 
 
 - [ ] PDB ID, protein name, organism, method, resolution, and chosen chain ID
 - [ ] Table of first 5 Cα ATOM records (residue name, number, X/Y/Z)
-- [ ] 8-class DSSP distribution table
-- [ ] Q3 distribution table
+- [ ] Q3 distribution table (H / E / C counts and percentages)
 - [ ] Longest continuous helix and strand with residue positions
 - [ ] Per-residue Q3 label string (printed in full)
 - [ ] Feature matrix shape
@@ -216,7 +226,7 @@ Submit a single PDF or Markdown file (with any code in a `.py` file or notebook 
 
 | Component | Weight | What we look for |
 |-----------|--------|-----------------|
-| **Correctness** | 60% | Accurate DSSP labels and Q3 distributions, correctly computed feature matrix, factually sound amino acid propensity interpretation |
+| **Correctness** | 60% | Accurate Q3 distributions, correctly computed feature matrix, factually sound amino acid propensity interpretation |
 | **Efficiency** | 20% | Clean, non-repetitive code; sensible use of NumPy vectorisation; no unnecessary steps |
 | **Clarity and Explanation** | 20% | Well-structured report, complete tables, clear interpretation of amino acid enrichment results |
 
@@ -224,9 +234,9 @@ Submit a single PDF or Markdown file (with any code in a `.py` file or notebook 
 
 | Sub-component | Points |
 |---------------|--------|
-| PDB metadata and Cα table correctly reported | 10 |
-| 8-class DSSP distribution accurate | 10 |
-| Q3 distribution and longest-run positions accurate | 15 |
+| Structure metadata and Cα table correctly reported | 10 |
+| Q3 distribution accurate | 15 |
+| Longest helix and strand positions accurate | 10 |
 | Feature matrix shape correct and encoding logic sound | 10 |
 | Amino acid enrichment computed correctly and interpreted accurately | 15 |
 
