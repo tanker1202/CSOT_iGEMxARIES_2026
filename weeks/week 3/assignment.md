@@ -222,7 +222,7 @@ Submit a single PDF or Markdown report (with any code in a `.py` file or noteboo
 - [ ] Results summary table + 2–4 sentence interpretation tying the winner to the biology
 - [ ] Code used (`.py` file or notebook)
 
-**Deadline**: Jun 21, 2026 — results posted to the [leaderboard](../../leaderboard.md) within 48 hours.
+**Deadline**: Jun 25, 2026 — results posted to the [leaderboard](../../leaderboard.md) within 48 hours.
 
 ---
 
