@@ -223,7 +223,7 @@ Submit a single PDF or Markdown report (with code as a `.py` file or notebook at
 - [ ] Methodology statement (group-aware split by chain + masking of padding)
 - [ ] Code (`.py` file or notebook)
 
-**Deadline**: Jun 28, 2026 — results posted to the [leaderboard](../../leaderboard.md) within 48 hours.
+**Deadline**: July 9th, 2026 — results posted to the [leaderboard](../../leaderboard.md) within 48 hours.
 
 ---
 
