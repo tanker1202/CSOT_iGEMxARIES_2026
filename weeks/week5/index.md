@@ -194,8 +194,7 @@ On the standard CB513 benchmark for Q3 prediction:
 | ESM2 / ProtT5 embeddings (deep) | ~85–90% |
 
 Adding PSSM to a classical model often matches or beats a deep model on raw sequence alone — this is why evolutionary features dominated the field for two decades before protein language models arrived.
-
-→ [Original PSSM / PSI-BLAST paper — Altschul et al. (1997)](https://www.sciencedirect.com/science/article/pii/S0022283697914870)  
+ 
 → [Biopython BLAST Applications docs](https://biopython.org/docs/latest/Tutorial/chapter_blast.html)  
 → [PSIPRED — one of the most influential PSSM-based secondary structure predictors](https://bioinf.cs.ucl.ac.uk/psipred/)
 
@@ -421,7 +420,6 @@ Hyperparameter tuning on top of that typically adds another **+2–3 points** �
 
 ## Resources
 
-- [PSI-BLAST — Altschul et al. (1997)](https://www.sciencedirect.com/science/article/pii/S0022283697914870) — the original paper introducing iterative profile search
 - [PSIPRED server](https://bioinf.cs.ucl.ac.uk/psipred/) — one of the most accurate classical secondary structure predictors; powered by PSSM features
 - [NCBI PSI-BLAST web server](https://blast.ncbi.nlm.nih.gov/Blast.cgi?PROGRAM=blastp&PAGE_TYPE=BlastSearch) — run PSI-BLAST online and download a PSSM file
 - [Biopython BLAST tutorial](https://biopython.org/docs/latest/Tutorial/chapter_blast.html) — parsing BLAST output and running searches from Python
@@ -433,4 +431,4 @@ Hyperparameter tuning on top of that typically adds another **+2–3 points** �
 
 ---
 
-[← Home](../../README.md)
+[← Home](../../README.md) | [Assignment →](assignment.md)
