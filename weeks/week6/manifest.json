@@ -1,0 +1,7 @@
+{
+  "model_weights": "bilstm_pssm.pt",
+  "config": "config.json",
+  "split": "split.json",
+  "held_out_val_accuracy_this_run": 0.6422764227642277,
+  "note": "PSSM features required at inference time \u2014 see pssm_dict for test chains, computed separately via PSI-BLAST (3 iterations, same settings as training data)."
+}
