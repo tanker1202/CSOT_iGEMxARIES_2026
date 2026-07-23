@@ -1,0 +1,22 @@
+{
+  "train_chains": [
+    "5CWI_A",
+    "2P9X_A",
+    "2AQ6_A",
+    "3DBO_A",
+    "5APG_B",
+    "3E2O_A",
+    "4RAJ_A",
+    "1UCS_A",
+    "5FMR_A",
+    "2OV9_B",
+    "3QU3_C"
+  ],
+  "val_chains": [
+    "3DQP_A",
+    "1J98_A",
+    "2V0P_B",
+    "4YCS_E"
+  ],
+  "seed": 42
+}
